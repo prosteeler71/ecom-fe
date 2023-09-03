@@ -37,32 +37,36 @@ const Users = () => {
     }
   };
 
-  const deleteUser = async (userName) => {
+ const deleteUser = async (userId) => {
     try {
-      const authToken = localStorage.getItem("authToken"); // Retrieve token from localStorage
+      const authToken = localStorage.getItem("token");
       if (!authToken) {
-        // Handle missing authToken
+        console.error("Missing authToken");
         return;
       }
 
       const response = await fetch(
-        `https://average-bathing-suit-foal.cyclic.cloud/users/${userName}`,
+        `https://average-bathing-suit-foal.cyclic.cloud/users/${userId}`,
         {
           method: "DELETE",
           headers: {
-            Authorization: `Bearer ${authToken.trim()}`, // Send token in the header
+            Authorization: `Bearer ${authToken.trim()}`,
           },
         }
       );
 
       if (response.status === 200) {
-        fetchUsers(); // Refresh the user list after deletion
+        console.log("User deleted successfully");
+
+        fetchUsers();
       } else {
         const data = await response.json();
-        setError(data.message || "An error occurred while deleting the user");
+        console.error(
+          data.message || "An error occurred while deleting the user"
+        );
       }
     } catch (error) {
-      setError("An error occurred while deleting the user");
+      console.error("An error occurred while deleting the user:", error);
     }
   };
 
